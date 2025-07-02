@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Calendar - MyFlo{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-header">
+        <h1>Period Calendar</h1>
+        <div class="calendar-navigation">
+            <a href="?year={{ prev_month.year }}&month={{ prev_month.month }}">&lt; Previous</a>
+            <span>{{ current_month|date:"F Y" }}</span>
+            <a href="?year={{ next_month.year }}&month={{ next_month.month }}">Next &gt;</a>
+        </div>
+    </div>
+    
+    <div class="calendar-grid">
+        <div class="calendar-weekdays">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+        </div>
+        
+        <div class="calendar-days">
+            {% for day in calendar_data %}
+            <div class="calendar-day">
+                <div class="day-number">{{ day.date.day }}</div>
+                
+                {% if day.periods %}
+                    <div class="period-indicator">Period</div>
+                {% endif %}
+                
+                {% if day.daily_log %}
+                    <div class="log-indicator">
+                        {% if day.daily_log.mood %}
+                            <span>{{ day.daily_log.mood|title }}</span>
+                        {% endif %}
+                        {% if day.daily_log.flow != 'none' %}
+                            <span>{{ day.daily_log.flow|title }}</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                {% if day.predictions %}
+                    <div class="predictions">
+                        {% for prediction in day.predictions %}
+                            <span class="prediction-{{ prediction.prediction_type }}">
+                                {{ prediction.get_prediction_type_display }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

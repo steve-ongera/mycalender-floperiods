@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Contraceptives - MyFlo{% endblock %}
+
+{% block content %}
+<div class="contraceptive-container">
+    <div class="page-header">
+        <h1>Contraceptive History</h1>
+        <a href="{% url 'add_contraceptive' %}">Add New Entry</a>
+    </div>
+    
+    {% if contraceptive_uses %}
+        <div class="contraceptive-list">
+            {% for use in contraceptive_uses %}
+            <div class="contraceptive-entry">
+                <h3>{{ use.contraceptive_type.name }}</h3>
+                <p><strong>Date:</strong> {{ use.date_taken|date:"M j, Y g:i A" }}</p>
+                <p><strong>Reason:</strong> {{ use.get_reason_display }}</p>
+                {% if use.dosage %}
+                    <p><strong>Dosage:</strong> {{ use.dosage }}</p>
+                {% endif %}
+                {% if use.notes %}
+                    <p><strong>Notes:</strong> {{ use.notes }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No contraceptive entries recorded yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

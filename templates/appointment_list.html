@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Appointments - MyFlo{% endblock %}
+
+{% block content %}
+<div class="appointments-container">
+    <div class="page-header">
+        <h1>Appointments</h1>
+        <a href="{% url 'add_appointment' %}">Schedule New Appointment</a>
+    </div>
+    
+    {% if appointments %}
+        <div class="appointments-list">
+            {% for appointment in appointments %}
+            <div class="appointment-card {% if appointment.is_completed %}completed{% endif %}">
+                <h3>{{ appointment.get_appointment_type_display }}</h3>
+                <p><strong>Date & Time:</strong> {{ appointment.appointment_date|date:"M j, Y g:i A" }}</p>
+                {% if appointment.health_provider %}
+                    <p><strong>Provider:</strong> {{ appointment.health_provider.name }}</p>
+                {% endif %}
+                {% if appointment.notes %}
+                    <p><strong>Notes:</strong> {{ appointment.notes }}</p>
+                {% endif %}
+                <p><strong>Status:</strong> 
+                    {% if appointment.is_completed %}
+                        Completed
+                    {% else %}
+                        Scheduled
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No appointments scheduled.</p>
+    {% endif %}
+</div>
+{% endblock %}

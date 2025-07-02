@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Insights - MyFlo{% endblock %}
+
+{% block content %}
+<div class="insights-container">
+    <h1>Your Cycle Insights</h1>
+    
+    {% if insights %}
+        <div class="insights-list">
+            {% for insight in insights %}
+            <div class="insight-card insight-{{ insight.insight_type }}">
+                <h3>{{ insight.title }}</h3>
+                <p>{{ insight.description }}</p>
+                <div class="insight-meta">
+                    <span>Data period: {{ insight.data_period_start|date:"M j" }} - {{ insight.data_period_end|date:"M j, Y" }}</span>
+                    <span>Generated: {{ insight.created_at|date:"M j, Y" }}</span>
+                </div>
+                <div class="insight-actions">
+                    <button onclick="dismissInsight({{ insight.id }})">Dismiss</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-insights">
+            <p>No new insights available. Keep logging your daily symptoms and periods to get personalized insights!</p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function dismissInsight(insightId) {
+    // Add AJAX call to dismiss insight
+    console.log('Dismissing insight:', insightId);
+}
+</script>
+{% endblock %}

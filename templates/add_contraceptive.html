@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Contraceptive - MyFlo{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Record Contraceptive Use</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.contraceptive_type.id_for_label }}">Contraceptive Type:</label>
+            {{ form.contraceptive_type }}
+            {% if form.contraceptive_type.errors %}
+                <div class="errors">{{ form.contraceptive_type.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.date_taken.id_for_label }}">Date & Time Taken:</label>
+            {{ form.date_taken }}
+            {% if form.date_taken.errors %}
+                <div class="errors">{{ form.date_taken.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.reason.id_for_label }}">Reason:</label>
+            {{ form.reason }}
+            {% if form.reason.errors %}
+                <div class="errors">{{ form.reason.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.dosage.id_for_label }}">Dosage (optional):</label>
+            {{ form.dosage }}
+            {% if form.dosage.errors %}
+                <div class="errors">{{ form.dosage.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.notes.id_for_label }}">Notes (optional):</label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+                <div class="errors">{{ form.notes.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit">Save Entry</button>
+            <a href="{% url 'contraceptive_list' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

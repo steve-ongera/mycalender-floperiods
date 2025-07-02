@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - MyFlo{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <h1>Settings</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="settings-section">
+            <h2>Notifications</h2>
+            
+            <div class="form-group">
+                <label for="{{ form.period_reminder_days.id_for_label }}">Period Reminder (days before):</label>
+                {{ form.period_reminder_days }}
+                {% if form.period_reminder_days.errors %}
+                    <div class="errors">{{ form.period_reminder_days.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.ovulation_reminder_enabled.id_for_label }}">
+                    {{ form.ovulation_reminder_enabled }} Enable Ovulation Reminders
+                </label>
+                {% if form.ovulation_reminder_enabled.errors %}
+                    <div class="errors">{{ form.ovulation_reminder_enabled.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.daily_log_reminder_time.id_for_label }}">Daily Log Reminder Time:</label>
+                {{ form.daily_log_reminder_time }}
+                {% if form.daily_log_reminder_time.errors %}
+                    <div class="errors">{{ form.daily_log_reminder_time.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h2>Privacy</h2>
+            
+            <div class="form-group">
+                <label for="{{ form.share_data_for_research.id_for_label }}">
+                    {{ form.share_data_for_research }} Share anonymous data for research
+                </label>
+                {% if form.share_data_for_research.errors %}
+                    <div class="errors">{{ form.share_data_for_research.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.allow_data_export.id_for_label }}">
+                    {{ form.allow_data_export }} Allow data export
+                </label>
+                {% if form.allow_data_export.errors %}
+                    <div class="errors">{{ form.allow_data_export.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h2>Display Preferences</h2>
+            
+            <div class="form-group">
+                <label for="{{ form.date_format.id_for_label }}">Date Format:</label>
+                {{ form.date_format }}
+                {% if form.date_format.errors %}
+                    <div class="errors">{{ form.date_format.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.temperature_unit.id_for_label }}">Temperature Unit:</label>
+                {{ form.temperature_unit }}
+                {% if form.temperature_unit.errors %}
+                    <div class="errors">{{ form.temperature_unit.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit">Save Settings</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

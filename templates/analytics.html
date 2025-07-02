@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics - MyFlo{% endblock %}
+
+{% block content %}
+<div class="analytics-container">
+    <h1>Cycle Analytics</h1>
+    
+    <div class="analytics-section">
+        <h2>Cycle Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Average Cycle Length</h3>
+                <div class="stat-value">{{ avg_cycle_length }} days</div>
+            </div>
+            <div class="stat-card">
+                <h3>Recent Periods</h3>
+                <div class="stat-value">{{ periods|length }}</div>
+            </div>
+        </div>
+    </div>
+    
+    {% if periods %}
+    <div class="analytics-section">
+        <h2>Recent Periods</h2>
+        <table class="periods-table">
+            <thead>
+                <tr>
+                    <th>Start Date</th>
+                    <th>Duration</th>
+                    <th>Flow</th>
+                    <th>Cycle Day</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for period in periods %}
+                <tr>
+                    <td>{{ period.start_date|date:"M j, Y" }}</td>
+                    <td>
+                        {% if period.duration %}
+                            {{ period.duration }} days
+                        {% else %}
+                            Ongoing
+                        {% endif %}
+                    </td>
+                    <td>{{ period.get_flow_intensity_display }}</td>
+                    <td>{{ period.cycle_day }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if cycle_lengths %}
+    <div class="analytics-section">
+        <h2>Cycle Length Variations</h2>
+        <div class="cycle-lengths">
+            {% for length in cycle_lengths %}
+                <span class="cycle-length-badge">{{ length }} days</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if mood_logs %}
+    <div class="analytics-section">
+        <h2>Recent Mood Patterns</h2>
+        <div class="mood-timeline">
+            {% for log in mood_logs %}
+            <div class="mood-entry">
+                <span class="mood-date">{{ log.date|date:"M j" }}</span>
+                <span class="mood-value mood-{{ log.mood }}">{{ log.get_mood_display }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

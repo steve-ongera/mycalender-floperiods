@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - MyFlo{% endblock %}
+
+{% block content %}
+<div class="notifications-container">
+    <h1>Notifications</h1>
+    
+    {% if notifications %}
+        <div class="notifications-list">
+            {% for notification in notifications %}
+            <div class="notification-item {% if not notification.is_read %}unread{% endif %}">
+                <div class="notification-header">
+                    <h3>{{ notification.title }}</h3>
+                    <span class="notification-date">{{ notification.scheduled_date|date:"M j, Y g:i A" }}</span>
+                </div>
+                <div class="notification-body">
+                    <p>{{ notification.message }}</p>
+                </div>
+                <div class="notification-meta">
+                    <span class="notification-type">{{ notification.get_notification_type_display }}</span>
+                    {% if not notification.is_read %}
+                        <a href="{% url 'mark_notification_read' notification.id %}">Mark as Read</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if notifications.has_other_pages %}
+        <div class="pagination">
+            {% if notifications.has_previous %}
+                <a href="?page={{ notifications.previous_page_number }}">&laquo; Previous</a>
+            {% endif %}
+            
+            <span class="current-page">
+                Page {{ notifications.number }} of {{ notifications.paginator.num_pages }}
+            </span>
+            
+            {% if notifications.has_next %}
+                <a href="?page={{ notifications.next_page_number }}">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="no-notifications">
+            <p>No notifications yet.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

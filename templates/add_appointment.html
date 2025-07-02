@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule Appointment - MyFlo{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Schedule Appointment</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.appointment_type.id_for_label }}">Appointment Type:</label>
+            {{ form.appointment_type }}
+            {% if form.appointment_type.errors %}
+                <div class="errors">{{ form.appointment_type.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.appointment_date.id_for_label }}">Date & Time:</label>
+            {{ form.appointment_date }}
+            {% if form.appointment_date.errors %}
+                <div class="errors">{{ form.appointment_date.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.health_provider.id_for_label }}">Health Provider (optional):</label>
+            {{ form.health_provider }}
+            {% if form.health_provider.errors %}
+                <div class="errors">{{ form.health_provider.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.notes.id_for_label }}">Notes:</label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+                <div class="errors">{{ form.notes.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit">Schedule Appointment</button>
+            <a href="{% url 'appointment_list' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

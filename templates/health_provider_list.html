@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Providers - MyFlo{% endblock %}
+
+{% block content %}
+<div class="providers-container">
+    <div class="page-header">
+        <h1>Health Providers</h1>
+        <a href="{% url 'add_health_provider' %}">Add New Provider</a>
+    </div>
+    
+    {% if providers %}
+        <div class="providers-list">
+            {% for provider in providers %}
+            <div class="provider-card">
+                <h3>{{ provider.name }}</h3>
+                {% if provider.specialty %}
+                    <p><strong>Specialty:</strong> {{ provider.specialty }}</p>
+                {% endif %}
+                {% if provider.phone %}
+                    <p><strong>Phone:</strong> {{ provider.phone }}</p>
+                {% endif %}
+                {% if provider.email %}
+                    <p><strong>Email:</strong> {{ provider.email }}</p>
+                {% endif %}
+                {% if provider.address %}
+                    <p><strong>Address:</strong> {{ provider.address }}</p>
+                {% endif %}
+                {% if provider.is_primary %}
+                    <span class="primary-indicator">Primary Provider</span>
+                {% endif %}
+                {% if provider.notes %}
+                    <p><strong>Notes:</strong> {{ provider.notes }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No health providers added yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

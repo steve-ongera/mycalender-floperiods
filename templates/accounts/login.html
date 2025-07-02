@@ -1,0 +1,21 @@
+<!-- Login Template: templates/accounts/login.html -->
+{% extends 'base.html' %}
+
+{% block title %}Login - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+<p><a href="{% url 'register' %}">Don't have an account? Register here</a></p>
+{% endblock %}

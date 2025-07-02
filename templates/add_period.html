@@ -1,0 +1,14 @@
+<!-- Add Period Template: templates/tracker/add_period.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Period - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Add New Period</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Period</button>
+    <a href="{% url 'period_list' %}">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,64 @@
+<!-- Daily Log Template: templates/tracker/daily_log.html -->
+{% extends 'base.html' %}
+
+{% block title %}Daily Log - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Daily Log - {{ log_date }}</h2>
+
+<div class="date-navigation">
+    <a href="?date={{ log_date|date:'Y-m-d'|add_days:-1 }}">&laquo; Previous Day</a>
+    <span>{{ log_date }}</span>
+    {% if log_date < today %}
+        <a href="?date={{ log_date|date:'Y-m-d'|add_days:1 }}">Next Day &raquo;</a>
+    {% endif %}
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <h3>Symptoms</h3>
+    <div class="symptoms-section">
+        {% for category, symptoms_in_category in symptoms|groupby:'category' %}
+            <h4>{{ category|title }}</h4>
+            {% for symptom in symptoms_in_category %}
+                <div class="symptom-item">
+                    <label>
+                        <input type="checkbox" name="symptoms" value="{{ symptom.id }}" 
+                               {% for existing in existing_symptoms %}
+                                   {% if existing.symptom.id == symptom.id %}checked{% endif %}
+                               {% endfor %}>
+                        {{ symptom.name }}
+                    </label>
+                    <select name="severities">
+                        <option value="">Severity</option>
+                        {% for existing in existing_symptoms %}
+                            {% if existing.symptom.id == symptom.id %}
+                                <option value="1" {% if existing.severity == 1 %}selected{% endif %}>1 - Mild</option>
+                                <option value="2" {% if existing.severity == 2 %}selected{% endif %}>2 - Moderate</option>
+                                <option value="3" {% if existing.severity == 3 %}selected{% endif %}>3 - Noticeable</option>
+                                <option value="4" {% if existing.severity == 4 %}selected{% endif %}>4 - Strong</option>
+                                <option value="5" {% if existing.severity == 5 %}selected{% endif %}>5 - Severe</option>
+                            {% else %}
+                                <option value="1">1 - Mild</option>
+                                <option value="2">2 - Moderate</option>
+                                <option value="3">3 - Noticeable</option>
+                                <option value="4">4 - Strong</option>
+                                <option value="5">5 - Severe</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    
+    <button type="submit">Save Daily Log</button>
+</form>
+
+<div class="daily-log-actions">
+    <a href="{% url 'daily_log_history' %}">View History</a>
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+</div>
+{% endblock %}

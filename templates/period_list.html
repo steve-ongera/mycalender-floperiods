@@ -1,0 +1,54 @@
+<!-- Period List Template: templates/tracker/period_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Periods - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Period History</h2>
+<a href="{% url 'add_period' %}">Add New Period</a>
+
+{% if periods %}
+    <table>
+        <thead>
+            <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Duration</th>
+                <th>Flow</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for period in periods %}
+                <tr>
+                    <td>{{ period.start_date }}</td>
+                    <td>{{ period.end_date|default:"Ongoing" }}</td>
+                    <td>{% if period.duration %}{{ period.duration }} days{% else %}N/A{% endif %}</td>
+                    <td>{{ period.get_flow_intensity_display }}</td>
+                    <td>
+                        <a href="{% url 'edit_period' period.id %}">Edit</a>
+                        <a href="{% url 'delete_period' period.id %}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if periods.has_other_pages %}
+        <div class="pagination">
+            {% if periods.has_previous %}
+                <a href="?page={{ periods.previous_page_number }}">&laquo; Previous</a>
+            {% endif %}
+            
+            Page {{ periods.number }} of {{ periods.paginator.num_pages }}
+            
+            {% if periods.has_next %}
+                <a href="?page={{ periods.next_page_number }}">Next &raquo;</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% else %}
+    <p>No periods recorded yet.</p>
+{% endif %}
+{% endblock %}

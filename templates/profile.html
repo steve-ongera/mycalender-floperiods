@@ -1,0 +1,40 @@
+<!-- Profile Template: templates/accounts/profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}Profile - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Profile</h2>
+
+<div class="profile-sections">
+    <section class="user-info">
+        <h3>User Information</h3>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Date of Birth:</strong> {{ user_profile.date_of_birth|default:"Not set" }}</p>
+        <p><strong>Phone:</strong> {{ user_profile.phone_number|default:"Not set" }}</p>
+        <p><strong>Emergency Contact:</strong> {{ user_profile.emergency_contact|default:"Not set" }}</p>
+        <p><strong>Emergency Phone:</strong> {{ user_profile.emergency_phone|default:"Not set" }}</p>
+        <p><strong>Privacy Level:</strong> {{ user_profile.get_privacy_level_display }}</p>
+        <a href="{% url 'edit_profile' %}">Edit Profile</a>
+    </section>
+
+    <section class="cycle-info">
+        <h3>Cycle Information</h3>
+        <p><strong>Average Cycle Length:</strong> {{ cycle_profile.average_cycle_length }} days</p>
+        <p><strong>Average Period Length:</strong> {{ cycle_profile.average_period_length }} days</p>
+        <p><strong>First Period Date:</strong> {{ cycle_profile.first_period_date|default:"Not set" }}</p>
+        <p><strong>Irregular Cycles:</strong> {% if cycle_profile.is_irregular %}Yes{% else %}No{% endif %}</p>
+        {% if cycle_profile.notes %}
+            <p><strong>Notes:</strong> {{ cycle_profile.notes }}</p>
+        {% endif %}
+        <a href="{% url 'edit_cycle_profile' %}">Edit Cycle Profile</a>
+    </section>
+</div>
+
+<div class="profile-actions">
+    <a href="{% url 'settings' %}">Settings</a>
+    <a href="{% url 'health_provider_list' %}">Health Providers</a>
+    <a href="{% url 'appointment_list' %}">Appointments</a>
+</div>
+{% endblock %}

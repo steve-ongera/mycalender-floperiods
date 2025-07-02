@@ -1,0 +1,57 @@
+<!-- Daily Log History Template: templates/tracker/daily_log_history.html -->
+{% extends 'base.html' %}
+
+{% block title %}Daily Log History - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Daily Log History</h2>
+
+{% if logs %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Flow</th>
+                <th>Mood</th>
+                <th>Energy</th>
+                <th>Pain</th>
+                <th>Sleep</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.date }}</td>
+                    <td>{{ log.get_flow_display }}</td>
+                    <td>{{ log.get_mood_display|default:"—" }}</td>
+                    <td>{% if log.energy_level %}{{ log.energy_level }}/10{% else %}—{% endif %}</td>
+                    <td>{% if log.pain_level %}{{ log.pain_level }}/10{% else %}—{% endif %}</td>
+                    <td>{% if log.sleep_hours %}{{ log.sleep_hours }}h{% else %}—{% endif %}</td>
+                    <td>
+                        <a href="{% url 'daily_log' %}?date={{ log.date }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if logs.has_other_pages %}
+        <div class="pagination">
+            {% if logs.has_previous %}
+                <a href="?page={{ logs.previous_page_number }}">&laquo; Previous</a>
+            {% endif %}
+            
+            Page {{ logs.number }} of {{ logs.paginator.num_pages }}
+            
+            {% if logs.has_next %}
+                <a href="?page={{ logs.next_page_number }}">Next &raquo;</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% else %}
+    <p>No daily logs recorded yet.</p>
+    <a href="{% url 'daily_log' %}">Create your first log</a>
+{% endif %}
+{% endblock %}

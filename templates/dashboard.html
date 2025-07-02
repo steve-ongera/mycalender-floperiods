@@ -1,0 +1,122 @@
+<!-- Dashboard Template: templates/tracker/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ user.first_name|default:user.username }}!</h2>
+
+<div class="dashboard-grid">
+    <!-- Quick Log Section -->
+    <section class="quick-log">
+        <h3>Today's Log - {{ today }}</h3>
+        <form method="post" action="{% url 'daily_log' %}">
+            {% csrf_token %}
+            <input type="hidden" name="date" value="{{ today }}">
+            <div>
+                <label>Flow:</label>
+                <select name="flow">
+                    <option value="none" {% if today_log.flow == 'none' %}selected{% endif %}>None</option>
+                    <option value="spotting" {% if today_log.flow == 'spotting' %}selected{% endif %}>Spotting</option>
+                    <option value="light" {% if today_log.flow == 'light' %}selected{% endif %}>Light</option>
+                    <option value="medium" {% if today_log.flow == 'medium' %}selected{% endif %}>Medium</option>
+                    <option value="heavy" {% if today_log.flow == 'heavy' %}selected{% endif %}>Heavy</option>
+                    <option value="very_heavy" {% if today_log.flow == 'very_heavy' %}selected{% endif %}>Very Heavy</option>
+                </select>
+            </div>
+            <div>
+                <label>Mood:</label>
+                <select name="mood">
+                    <option value="">Select mood</option>
+                    <option value="happy" {% if today_log.mood == 'happy' %}selected{% endif %}>Happy</option>
+                    <option value="sad" {% if today_log.mood == 'sad' %}selected{% endif %}>Sad</option>
+                    <option value="anxious" {% if today_log.mood == 'anxious' %}selected{% endif %}>Anxious</option>
+                    <option value="irritable" {% if today_log.mood == 'irritable' %}selected{% endif %}>Irritable</option>
+                    <option value="calm" {% if today_log.mood == 'calm' %}selected{% endif %}>Calm</option>
+                    <option value="energetic" {% if today_log.mood == 'energetic' %}selected{% endif %}>Energetic</option>
+                    <option value="tired" {% if today_log.mood == 'tired' %}selected{% endif %}>Tired</option>
+                    <option value="neutral" {% if today_log.mood == 'neutral' %}selected{% endif %}>Neutral</option>
+                </select>
+            </div>
+            <button type="submit">Update Today's Log</button>
+        </form>
+        <p><a href="{% url 'daily_log' %}">View Full Daily Log</a></p>
+    </section>
+
+    <!-- Recent Period Section -->
+    <section class="recent-period">
+        <h3>Recent Period</h3>
+        {% if recent_period %}
+            <p>Last period started: {{ recent_period.start_date }}</p>
+            {% if recent_period.end_date %}
+                <p>Ended: {{ recent_period.end_date }}</p>
+                <p>Duration: {{ recent_period.duration }} days</p>
+            {% else %}
+                <p>Ongoing period</p>
+            {% endif %}
+            <p>Flow: {{ recent_period.get_flow_intensity_display }}</p>
+        {% else %}
+            <p>No periods recorded yet.</p>
+            <p><a href="{% url 'add_period' %}">Add your first period</a></p>
+        {% endif %}
+    </section>
+
+    <!-- Predictions Section -->
+    <section class="predictions">
+        <h3>Predictions</h3>
+        {% if predictions %}
+            {% for prediction in predictions %}
+                <div class="prediction-item">
+                    <strong>{{ prediction.get_prediction_type_display }}</strong>
+                    <p>{{ prediction.predicted_date }}</p>
+                    <small>Confidence: {{ prediction.get_confidence_level_display }}</small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Add more period data to see predictions.</p>
+        {% endif %}
+    </section>
+
+    <!-- Notifications Section -->
+    <section class="notifications">
+        <h3>Recent Notifications</h3>
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="notification-item">
+                    <strong>{{ notification.title }}</strong>
+                    <p>{{ notification.message }}</p>
+                    <small>{{ notification.scheduled_date }}</small>
+                </div>
+            {% endfor %}
+            <p><a href="{% url 'notifications' %}">View all notifications</a></p>
+        {% else %}
+            <p>No new notifications.</p>
+        {% endif %}
+    </section>
+
+    <!-- Insights Section -->
+    <section class="insights">
+        <h3>Insights</h3>
+        {% if insights %}
+            {% for insight in insights %}
+                <div class="insight-item">
+                    <strong>{{ insight.title }}</strong>
+                    <p>{{ insight.description }}</p>
+                </div>
+            {% endfor %}
+            <p><a href="{% url 'insights' %}">View all insights</a></p>
+        {% else %}
+            <p>No insights available yet. Keep logging data to see patterns!</p>
+        {% endif %}
+    </section>
+</div>
+
+<!-- Quick Actions -->
+<section class="quick-actions">
+    <h3>Quick Actions</h3>
+    <a href="{% url 'add_period' %}">Add Period</a>
+    <a href="{% url 'daily_log' %}">Daily Log</a>
+    <a href="{% url 'add_contraceptive' %}">Log Contraceptive</a>
+    <a href="{% url 'calendar' %}">View Calendar</a>
+</section>
+{% endblock %}

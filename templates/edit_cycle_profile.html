@@ -1,0 +1,14 @@
+<!-- Edit Cycle Profile Template: templates/accounts/edit_cycle_profile.html -->
+{% extends 'base.html' %}
+
+{% block title %}Edit Cycle Profile - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Edit Cycle Profile</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+    <a href="{% url 'profile' %}">Cancel</a>
+</form>
+{% endblock %}

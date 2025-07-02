@@ -1,0 +1,14 @@
+<!-- Delete Period Template: templates/tracker/delete_period.html -->
+{% extends 'base.html' %}
+
+{% block title %}Delete Period - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Delete Period</h2>
+<p>Are you sure you want to delete the period starting {{ period.start_date }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'period_list' %}">Cancel</a>
+</form>
+{% endblock %}

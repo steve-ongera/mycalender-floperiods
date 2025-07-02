@@ -1,0 +1,14 @@
+<!-- Edit Period Template: templates/tracker/edit_period.html -->
+{% extends 'base.html' %}
+
+{% block title %}Edit Period - Period Tracker{% endblock %}
+
+{% block content %}
+<h2>Edit Period</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+    <a href="{% url 'period_list' %}">Cancel</a>
+</form>
+{% endblock %}

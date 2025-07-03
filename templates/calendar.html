@@ -3,16 +3,291 @@
 {% block title %}Calendar - MyFlo{% endblock %}
 
 {% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+    :root {
+        --primary-purple: #8B5CF6;
+        --secondary-purple: #A78BFA;
+        --light-purple: #F3F4F6;
+        --dark-purple: #5B21B6;
+        --accent-pink: #EC4899;
+        --soft-lavender: #EDE9FE;
+        --text-dark: #374151;
+        --text-light: #6B7280;
+        --period-red: #EF4444;
+        --ovulation-green: #10B981;
+        --fertile-blue: #3B82F6;
+    }
+
+    .calendar-container {
+        max-width: 900px;
+        margin: 1.5rem auto;
+        padding: 0 1rem;
+    }
+
+    .calendar-header {
+        background: white;
+        border-radius: 12px 12px 0 0;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+    }
+
+    .calendar-header h1 {
+        color: var(--dark-purple);
+        font-weight: 600;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .calendar-navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 350px;
+        margin: 0 auto;
+    }
+
+    .calendar-navigation a {
+        background: var(--primary-purple);
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .calendar-navigation a:hover {
+        background: var(--dark-purple);
+        color: white;
+    }
+
+    .calendar-navigation span {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--dark-purple);
+    }
+
+    .calendar-grid {
+        background: white;
+        border-radius: 0 0 12px 12px;
+        padding: 1rem;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+    }
+
+    .calendar-weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--soft-lavender);
+    }
+
+    .calendar-weekdays div {
+        text-align: center;
+        font-weight: 600;
+        color: var(--dark-purple);
+        font-size: 0.85rem;
+        padding: 0.3rem;
+        text-transform: uppercase;
+    }
+
+    .calendar-days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+    }
+
+    .calendar-day {
+        background: white;
+        border-radius: 8px;
+        padding: 0.5rem;
+        min-height: 80px;
+        border: 1px solid #f0f0f0;
+        transition: all 0.2s ease;
+    }
+
+    .calendar-day:hover {
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+    }
+
+    .day-number {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 0.3rem;
+        text-align: center;
+    }
+
+    .period-indicator {
+        background: var(--period-red);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 500;
+        padding: 0.15rem 0.3rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 0.3rem;
+    }
+
+    .log-indicator {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .log-indicator span {
+        background: var(--secondary-purple);
+        color: white;
+        font-size: 0.6rem;
+        font-weight: 500;
+        padding: 0.15rem 0.3rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .predictions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+
+    .predictions span {
+        font-size: 0.6rem;
+        font-weight: 500;
+        padding: 0.15rem 0.3rem;
+        border-radius: 8px;
+        text-align: center;
+        color: white;
+    }
+
+    .prediction-ovulation {
+        background: var(--ovulation-green);
+    }
+
+    .prediction-fertile {
+        background: var(--fertile-blue);
+    }
+
+    .prediction-period {
+        background: var(--period-red);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .calendar-container {
+            margin: 1rem auto;
+            padding: 0 0.5rem;
+        }
+
+        .calendar-header {
+            padding: 1rem;
+        }
+
+        .calendar-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .calendar-navigation {
+            max-width: 280px;
+        }
+
+        .calendar-navigation a {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .calendar-navigation span {
+            font-size: 1rem;
+        }
+
+        .calendar-day {
+            min-height: 70px;
+            padding: 0.4rem;
+        }
+
+        .day-number {
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Today's date highlighting */
+    .calendar-day.today {
+        background: var(--soft-lavender);
+        border-color: var(--primary-purple);
+    }
+
+    .calendar-day.today .day-number {
+        color: var(--dark-purple);
+        font-weight: 700;
+    }
+
+    /* Legend */
+    .calendar-legend {
+        background: white;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
+    }
+
+    .legend-title {
+        color: var(--dark-purple);
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+        text-align: center;
+    }
+
+    .legend-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        justify-content: center;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.8rem;
+        background: white;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        border: 1px solid #f0f0f0;
+    }
+
+    .legend-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+    }
+
+    .legend-period { background: var(--period-red); }
+    .legend-ovulation { background: var(--ovulation-green); }
+    .legend-fertile { background: var(--fertile-blue); }
+    .legend-mood { background: var(--secondary-purple); }
+</style>
+
 <div class="calendar-container">
     <div class="calendar-header">
-        <h1>Period Calendar</h1>
+        <h1><i class="fas fa-calendar-alt me-2"></i>Period Calendar</h1>
         <div class="calendar-navigation">
-            <a href="?year={{ prev_month.year }}&month={{ prev_month.month }}">&lt; Previous</a>
+            <a href="?year={{ prev_month.year }}&month={{ prev_month.month }}" class="nav-btn">
+                <i class="fas fa-chevron-left me-1"></i>Prev
+            </a>
             <span>{{ current_month|date:"F Y" }}</span>
-            <a href="?year={{ next_month.year }}&month={{ next_month.month }}">Next &gt;</a>
+            <a href="?year={{ next_month.year }}&month={{ next_month.month }}" class="nav-btn">
+                Next<i class="fas fa-chevron-right ms-1"></i>
+            </a>
         </div>
     </div>
-    
+
     <div class="calendar-grid">
         <div class="calendar-weekdays">
             <div>Sun</div>
@@ -23,31 +298,40 @@
             <div>Fri</div>
             <div>Sat</div>
         </div>
-        
+
         <div class="calendar-days">
             {% for day in calendar_data %}
-            <div class="calendar-day">
+            <div class="calendar-day {% if day.is_today %}today{% endif %}" data-date="{{ day.date|date:'Y-m-d' }}">
                 <div class="day-number">{{ day.date.day }}</div>
-                
+
                 {% if day.periods %}
-                    <div class="period-indicator">Period</div>
+                    <div class="period-indicator">
+                        <i class="fas fa-tint me-1"></i>Period
+                    </div>
                 {% endif %}
-                
+
                 {% if day.daily_log %}
                     <div class="log-indicator">
                         {% if day.daily_log.mood %}
-                            <span>{{ day.daily_log.mood|title }}</span>
+                            <span><i class="fas fa-smile me-1"></i>{{ day.daily_log.mood|title }}</span>
                         {% endif %}
                         {% if day.daily_log.flow != 'none' %}
-                            <span>{{ day.daily_log.flow|title }}</span>
+                            <span><i class="fas fa-droplet me-1"></i>{{ day.daily_log.flow|title }}</span>
                         {% endif %}
                     </div>
                 {% endif %}
-                
+
                 {% if day.predictions %}
                     <div class="predictions">
                         {% for prediction in day.predictions %}
                             <span class="prediction-{{ prediction.prediction_type }}">
+                                {% if prediction.prediction_type == 'ovulation' %}
+                                    <i class="fas fa-egg me-1"></i>
+                                {% elif prediction.prediction_type == 'fertile' %}
+                                    <i class="fas fa-seedling me-1"></i>
+                                {% elif prediction.prediction_type == 'period' %}
+                                    <i class="fas fa-calendar-check me-1"></i>
+                                {% endif %}
                                 {{ prediction.get_prediction_type_display }}
                             </span>
                         {% endfor %}
@@ -57,5 +341,53 @@
             {% endfor %}
         </div>
     </div>
+
+    <!-- Legend -->
+    <div class="calendar-legend">
+        <div class="legend-title">
+            <i class="fas fa-info-circle me-1"></i>Calendar Legend
+        </div>
+        <div class="legend-items">
+            <div class="legend-item">
+                <div class="legend-color legend-period"></div>
+                <span>Period</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-ovulation"></div>
+                <span>Ovulation</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-fertile"></div>
+                <span>Fertile</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-mood"></div>
+                <span>Mood & Flow</span>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Highlight today's date
+    const today = new Date().toISOString().split('T')[0];
+    const todayElement = document.querySelector(`[data-date="${today}"]`);
+    if (todayElement) {
+        todayElement.classList.add('today');
+    }
+
+    // Add click event for calendar days
+    const calendarDays = document.querySelectorAll('.calendar-day');
+    
+    calendarDays.forEach(day => {
+        day.addEventListener('click', function() {
+            // You can add your custom click handling here
+            // For example, open a modal to log data for this day
+            console.log('Day clicked:', this.getAttribute('data-date'));
+        });
+    });
+});
+</script>
 {% endblock %}
